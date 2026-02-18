@@ -460,8 +460,12 @@
           <input type="text" id="firstName" placeholder="Your first name" autocomplete="given-name" />
         </div>
         <div class="field">
-          <label for="email">Email Address</label>
+          <label for="email">Email Address <span style="font-weight:300; color:var(--mid);">— or use your phone number below</span></label>
           <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
+        </div>
+        <div class="field">
+          <label for="phone">Phone Number <span style="font-weight:300; color:var(--mid);">— or use your email above</span></label>
+          <input type="text" id="phone" placeholder="(401) 555-1234" autocomplete="tel" />
           <div style="font-size:0.78rem; color:var(--mid); margin-top:0.4rem;">Used to connect your responses to your profile. Never used for marketing.</div>
         </div>
       </div>
@@ -704,7 +708,12 @@
     if (step === 1) {
       const fn = document.getElementById('firstName').value.trim();
       const em = document.getElementById('email').value.trim();
-      if (!fn || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { show('err1'); return false; }
+      const ph = document.getElementById('phone').value.trim();
+      const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);
+      if (!fn || (!emailValid && !ph)) {
+        document.getElementById('err1').textContent = 'Please enter your first name and either an email address or phone number.';
+        show('err1'); return false;
+      }
       hide('err1'); return true;
     }
 
@@ -766,6 +775,7 @@
 
     const firstName = document.getElementById('firstName').value.trim();
     const email     = document.getElementById('email').value.trim();
+    const phone     = document.getElementById('phone').value.trim();
 
     const pssAnswers = {};
     for (let i = 0; i < 10; i++) {
@@ -775,6 +785,7 @@
     const payload = {
       firstName,
       email,
+      phone,
       assessmentDate: new Date().toISOString(),
       psychlopsProblem:     document.getElementById('psychProblem').value.trim(),
       psychlopsImpact:      parseInt(document.querySelector('input[name="impact"]:checked').value),

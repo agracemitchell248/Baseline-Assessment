@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unbroken — Check-In Assessment</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:       #203445;
+      --sage:       #5da0af;
+      --sage-dark:  #3d7a87;
+      --sage-light: #b5d8df;
+      --sage-bg:    #eef6f8;
+      --amber:      #dfb852;
+      --amber-bg:   #fdf8ec;
+      --coral:      #d56439;
+      --cream:      #f7f4ef;
+      --warm-white: #fdfbf8;
+      --charcoal:   #2c3e50;
+      --mid:        #6b7c8d;
+      --border:     #e2ddd6;
+      --green:      #4a7c59;
+      --green-bg:   #eef4f0;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--navy);
+      color: var(--charcoal);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem 5rem;
+    }
+
+    /* ── Header ── */
+    .header {
+      width: 100%;
+      max-width: 660px;
+      text-align: center;
+      margin-bottom: 1.75rem;
+    }
+
+    .logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.75rem;
+      color: #fff;
+      letter-spacing: 0.02em;
+    }
+
+    .logo em { font-style: italic; color: var(--sage-light); }
+
+    .logo-sub {
+      font-size: 0.75rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+
+    /* ── Progress ── */
+    .progress-wrap {
+      width: 100%;
+      max-width: 660px;
+      margin-bottom: 1.5rem;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-track {
+      height: 3px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 2px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--sage) 0%, var(--amber) 100%);
+      border-radius: 2px;
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--warm-white);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 660px;
+      overflow: hidden;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.28);
+    }
+
+    .card-body {
+      padding: 2.5rem 2.5rem 2rem;
+    }
+
+    /* ── Section label ── */
+    .eyebrow {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--sage-dark);
+      margin-bottom: 0.6rem;
+    }
+
+    .screen-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.75rem;
+      line-height: 1.25;
+      color: var(--charcoal);
+      margin-bottom: 0.75rem;
+    }
+
+    .screen-desc {
+      font-size: 0.9rem;
+      color: var(--mid);
+      line-height: 1.75;
+      margin-bottom: 1.75rem;
+    }
+
+    /* ── Info boxes ── */
+    .info-box {
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.25rem;
+      display: flex;
+      gap: 0.85rem;
+      align-items: flex-start;
+    }
+
+    .info-box .icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .info-box .text {
+      font-size: 0.85rem;
+      line-height: 1.65;
+    }
+
+    .info-box .text strong {
+      display: block;
+      margin-bottom: 0.2rem;
+      font-weight: 500;
+    }
+
+    .info-box.purpose {
+      background: var(--sage-bg);
+      border: 1px solid var(--sage-light);
+    }
+
+    .info-box.purpose .text { color: var(--sage-dark); }
+
+    .info-box.privacy {
+      background: var(--green-bg);
+      border: 1px solid #b5cfbe;
+    }
+
+    .info-box.privacy .text { color: var(--green); }
+
+    .info-box.reminder {
+      background: var(--amber-bg);
+      border: 1px solid #f0dfa0;
+    }
+
+    .info-box.reminder .text { color: #7a5c10; }
+
+    /* ── Form fields ── */
+    .field { margin-bottom: 1.25rem; }
+
+    .field label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--charcoal);
+      margin-bottom: 0.45rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      color: var(--charcoal);
+      background: var(--cream);
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    input:focus, textarea:focus {
+      border-color: var(--sage);
+      background: var(--warm-white);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 110px;
+      line-height: 1.6;
+    }
+
+    /* ── Scale questions ── */
+    .q-block { margin-bottom: 2rem; }
+
+    .q-block:last-of-type { margin-bottom: 0; }
+
+    .q-text {
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: var(--charcoal);
+      margin-bottom: 0.85rem;
+      font-weight: 400;
+    }
+
+    .q-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background: var(--sage-bg);
+      color: var(--sage-dark);
+      border-radius: 50%;
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-right: 0.5rem;
+      flex-shrink: 0;
+      vertical-align: middle;
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .opt-label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.7rem 1rem;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      background: var(--cream);
+      user-select: none;
+    }
+
+    .opt-label:hover {
+      border-color: var(--sage-light);
+      background: var(--sage-bg);
+    }
+
+    .opt-label.selected {
+      border-color: var(--sage);
+      background: var(--sage-bg);
+    }
+
+    .opt-label input[type="radio"] {
+      accent-color: var(--sage-dark);
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .opt-label span {
+      font-size: 0.9rem;
+      color: var(--charcoal);
+    }
+
+    /* ── Divider ── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 1.75rem 0;
+    }
+
+    /* ── Nav bar ── */
+    .nav-bar {
+      background: var(--warm-white);
+      border-top: 1px solid var(--border);
+      padding: 1.25rem 2.5rem;
+      display: flex;
+      gap: 0.85rem;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      padding: 0.8rem 1.75rem;
+      border-radius: 50px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--navy);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--charcoal); }
+    .btn-primary:disabled { background: #b0bec5; cursor: not-allowed; }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--mid);
+      border: 1.5px solid var(--border);
+    }
+
+    .btn-ghost:hover { border-color: var(--sage-light); color: var(--charcoal); }
+
+    /* ── Error banner ── */
+    .error-banner {
+      background: #fdf0ef;
+      border: 1px solid #e8b4b0;
+      border-radius: 10px;
+      padding: 0.8rem 1rem;
+      font-size: 0.82rem;
+      color: #a93226;
+      margin-bottom: 1.25rem;
+      display: none;
+    }
+
+    /* ── Steps ── */
+    .screen { display: none; }
+    .screen.active { display: block; animation: fadeUp 0.3s ease; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Thank you ── */
+    .thankyou {
+      text-align: center;
+      padding: 2rem 0 1rem;
+    }
+
+    .ty-icon {
+      font-size: 3rem;
+      margin-bottom: 1.25rem;
+      display: block;
+    }
+
+    .ty-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem;
+      color: var(--charcoal);
+      margin-bottom: 0.75rem;
+    }
+
+    .ty-body {
+      font-size: 0.95rem;
+      color: var(--mid);
+      line-height: 1.75;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    /* ── Spinner ── */
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.65s linear infinite;
+      vertical-align: middle;
+      margin-right: 0.5rem;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 500px) {
+      .card-body { padding: 1.75rem 1.25rem 1.5rem; }
+      .nav-bar { padding: 1rem 1.25rem; flex-direction: column-reverse; }
+      .btn { width: 100%; text-align: center; }
+      .screen-title { font-size: 1.45rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo" style="font-size:1.3rem; font-weight:300; letter-spacing:0.08em; font-family:'DM Sans',sans-serif; color:rgba(255,255,255,0.7);">Check In</div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <div class="progress-meta">
+      <span id="stepLabel">Step 1 of 6</span>
+      <span id="stepPct">0%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <!-- Card -->
+  <div class="card">
+
+    <!-- ════════════════════════════════
+         SCREEN 1 — Welcome
+    ════════════════════════════════ -->
+    <div class="screen active" id="screen1">
+      <div class="card-body">
+        <div class="eyebrow">Welcome</div>
+        <h1 class="screen-title">What you're carrying is real.</h1>
+        <p class="screen-desc">Losing a job — or watching funding you fought for disappear — isn't just a practical setback. It can shake your sense of identity, security, and purpose all at once. That's not weakness. That's a very human response to a very real loss.</p>
+
+        <p class="screen-desc" style="margin-top:-1rem;">Unbroken was built for exactly this moment. This short check-in — about 5–8 minutes — is one of the ways we walk alongside you.</p>
+
+        <div class="info-box purpose">
+          <div class="icon">📈</div>
+          <div class="text">
+            <strong>Seeing your own progress matters</strong>
+            People healing from loss and trauma often can't feel their own progress — the changes are real, but they happen beneath the surface. These questions give that progress a shape you can actually see. Each time you check in, you build a record of your own resilience. Over time, you'll be able to look back and witness how far you've come — even on the days it doesn't feel like it.
+          </div>
+        </div>
+
+        <div class="info-box privacy">
+          <div class="icon">🔒</div>
+          <div class="text">
+            <strong>Your privacy is non-negotiable</strong>
+            Your responses are stored privately and securely. They are never sold, shared, or used for anything other than supporting your journey. Only you and our founder, Aimee, can access them — and only with your knowledge.
+          </div>
+        </div>
+
+        <div class="error-banner" id="err1">Please fill in your first name and a valid email address.</div>
+
+        <div class="divider"></div>
+
+        <div class="field">
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" placeholder="Your first name" autocomplete="given-name" />
+        </div>
+        <div class="field">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
+          <div style="font-size:0.78rem; color:var(--mid); margin-top:0.4rem;">Used to connect your responses to your profile. Never used for marketing.</div>
+        </div>
+      </div>
+      <div class="nav-bar">
+        <button class="btn btn-primary" onclick="advance(2)">I'm ready →</button>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════
+         SCREEN 2 — PSYCHLOPS Q1 + Q2
+    ════════════════════════════════ -->
+    <div class="screen" id="screen2">
+      <div class="card-body">
+        <div class="eyebrow">About Your Week · Part 1 of 2</div>
+        <h2 class="screen-title">What's been on your mind?</h2>
+        <p class="screen-desc">Think about the <strong>past week</strong>. There are no right or wrong answers.</p>
+
+        <div class="info-box reminder">
+          <div class="icon">💡</div>
+          <div class="text">Your answers here help us understand the specific challenge you're navigating — and track how it changes as you work through the program.</div>
+        </div>
+
+        <div class="error-banner" id="err2">Please answer both questions before continuing.</div>
+
+        <!-- Q1: Problem Description -->
+        <div class="q-block">
+          <p class="q-text"><span class="q-number">1</span> What is the main problem or difficulty you have been experiencing this week? Please describe it briefly.</p>
+          <textarea id="psychProblem" placeholder="Describe the main thing on your mind this week..."></textarea>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Q2: Problem Impact -->
+        <div class="q-block">
+          <p class="q-text"><span class="q-number">2</span> How much has this problem affected you during the past week?</p>
+          <div class="options-list" id="impactOpts">
+            <label class="opt-label"><input type="radio" name="impact" value="0" /><span>Not at all</span></label>
+            <label class="opt-label"><input type="radio" name="impact" value="1" /><span>Slightly</span></label>
+            <label class="opt-label"><input type="radio" name="impact" value="2" /><span>Moderately</span></label>
+            <label class="opt-label"><input type="radio" name="impact" value="3" /><span>Very much</span></label>
+            <label class="opt-label"><input type="radio" name="impact" value="4" /><span>Extremely</span></label>
+          </div>
+        </div>
+      </div>
+      <div class="nav-bar">
+        <button class="btn btn-ghost" onclick="advance(1)">← Back</button>
+        <button class="btn btn-primary" onclick="advance(3)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════
+         SCREEN 3 — PSYCHLOPS Q3 + Q4
+    ════════════════════════════════ -->
+    <div class="screen" id="screen3">
+      <div class="card-body">
+        <div class="eyebrow">About Your Week · Part 2 of 2</div>
+        <h2 class="screen-title">Your day-to-day life.</h2>
+        <p class="screen-desc">Still thinking about the <strong>past week</strong>.</p>
+
+        <div class="error-banner" id="err3">Please answer both questions before continuing.</div>
+
+        <!-- Q3: Functioning -->
+        <div class="q-block">
+          <p class="q-text"><span class="q-number">3</span> How much difficulty have you had doing your day-to-day activities during the past week?</p>
+          <div class="options-list" id="functioningOpts">
+            <label class="opt-label"><input type="radio" name="functioning" value="0" /><span>No difficulty</span></label>
+            <label class="opt-label"><input type="radio" name="functioning" value="1" /><span>Slight difficulty</span></label>
+            <label class="opt-label"><input type="radio" name="functioning" value="2" /><span>Moderate difficulty</span></label>
+            <label class="opt-label"><input type="radio" name="functioning" value="3" /><span>Much difficulty</span></label>
+            <label class="opt-label"><input type="radio" name="functioning" value="4" /><span>Extreme difficulty</span></label>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Q4: Wellbeing -->
+        <div class="q-block">
+          <p class="q-text"><span class="q-number">4</span> Overall, how would you rate your wellbeing during the past week?</p>
+          <div class="options-list" id="wellbeingOpts">
+            <label class="opt-label"><input type="radio" name="wellbeing" value="4" /><span>Very good</span></label>
+            <label class="opt-label"><input type="radio" name="wellbeing" value="3" /><span>Good</span></label>
+            <label class="opt-label"><input type="radio" name="wellbeing" value="2" /><span>Fair</span></label>
+            <label class="opt-label"><input type="radio" name="wellbeing" value="1" /><span>Poor</span></label>
+            <label class="opt-label"><input type="radio" name="wellbeing" value="0" /><span>Very poor</span></label>
+          </div>
+        </div>
+      </div>
+      <div class="nav-bar">
+        <button class="btn btn-ghost" onclick="advance(2)">← Back</button>
+        <button class="btn btn-primary" onclick="advance(4)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════
+         SCREEN 4 — PSS Q1–5
+    ════════════════════════════════ -->
+    <div class="screen" id="screen4">
+      <div class="card-body">
+        <div class="eyebrow">Stress Check-In · Part 1 of 2</div>
+        <h2 class="screen-title">How stressed have you been?</h2>
+        <p class="screen-desc">The following questions ask about your feelings and thoughts during the <strong>last month</strong>. In each case, indicate how often you felt or thought a certain way.</p>
+
+        <div class="info-box reminder">
+          <div class="icon">💡</div>
+          <div class="text">This section measures your overall stress level. Over time, your scores here will show us — and you — how Unbroken is working. Your responses are private and completely confidential.</div>
+        </div>
+
+        <div class="error-banner" id="err4">Please answer all questions before continuing.</div>
+
+        <div id="pssBlock1"></div>
+      </div>
+      <div class="nav-bar">
+        <button class="btn btn-ghost" onclick="advance(3)">← Back</button>
+        <button class="btn btn-primary" onclick="advance(5)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════
+         SCREEN 5 — PSS Q6–10
+    ════════════════════════════════ -->
+    <div class="screen" id="screen5">
+      <div class="card-body">
+        <div class="eyebrow">Stress Check-In · Part 2 of 2</div>
+        <h2 class="screen-title">Almost there.</h2>
+        <p class="screen-desc">Still thinking about the <strong>last month</strong>.</p>
+
+        <div class="error-banner" id="err5">Please answer all questions before submitting.</div>
+
+        <div id="pssBlock2"></div>
+      </div>
+      <div class="nav-bar">
+        <button class="btn btn-ghost" onclick="advance(4)">← Back</button>
+        <button class="btn btn-primary" id="submitBtn" onclick="submitForm()">Submit Check-In ✓</button>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════
+         SCREEN 6 — Thank You
+    ════════════════════════════════ -->
+    <div class="screen" id="screen6">
+      <div class="card-body">
+        <div class="thankyou">
+          <span class="ty-icon">🌱</span>
+          <h2 class="ty-title">Thank you, <span id="thankName"></span>.</h2>
+          <p class="ty-body">Your responses have been recorded. Showing up for yourself — even when it's hard — is part of the work. You can close this window and return to the app.</p>
+          <br/>
+          <div class="info-box privacy" style="text-align:left; margin-top:1rem;">
+            <div class="icon">🔒</div>
+            <div class="text">Your responses are stored securely. Only you and our founder, Aimee, can access them.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /card -->
+
+<script>
+  // ── PSS Question data ──
+  const PSS = [
+    "In the last month, how often have you been upset because of something that happened unexpectedly?",
+    "In the last month, how often have you felt that you were unable to control the important things in your life?",
+    "In the last month, how often have you felt nervous and stressed?",
+    "In the last month, how often have you felt confident about your ability to handle your personal problems?",
+    "In the last month, how often have you felt that things were going your way?",
+    "In the last month, how often have you been able to control irritations in your life?",
+    "In the last month, how often have you felt that you were on top of things?",
+    "In the last month, how often have you been angered because of things that were outside of your control?",
+    "In the last month, how often have you felt difficulties were piling up so high that you could not overcome them?",
+    "In the last month, how often have you felt that you were effectively coping with important changes in your life?"
+  ];
+
+  const PSS_REVERSED = new Set([3, 4, 5, 6, 9]); // 0-indexed
+
+  const PSS_OPTS = [
+    { label: "Never",        value: 0 },
+    { label: "Almost never", value: 1 },
+    { label: "Sometimes",    value: 2 },
+    { label: "Fairly often", value: 3 },
+    { label: "Very often",   value: 4 }
+  ];
+
+  function buildPSSBlock(container, indices) {
+    indices.forEach((qi, pos) => {
+      const div = document.createElement('div');
+      div.className = 'q-block';
+      div.innerHTML = `
+        <p class="q-text"><span class="q-number">${qi + 1}</span> ${PSS[qi]}</p>
+        <div class="options-list" id="pssOpts${qi}">
+          ${PSS_OPTS.map(o => `
+            <label class="opt-label">
+              <input type="radio" name="pss${qi}" value="${o.value}" />
+              <span>${o.label}</span>
+            </label>`).join('')}
+        </div>
+        ${pos < indices.length - 1 ? '<div class="divider"></div>' : ''}
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  buildPSSBlock(document.getElementById('pssBlock1'), [0,1,2,3,4]);
+  buildPSSBlock(document.getElementById('pssBlock2'), [5,6,7,8,9]);
+
+  // ── Highlight selected options ──
+  document.addEventListener('change', e => {
+    if (e.target.type === 'radio') {
+      document.querySelectorAll(`input[name="${e.target.name}"]`).forEach(r => {
+        r.closest('.opt-label').classList.remove('selected');
+      });
+      e.target.closest('.opt-label').classList.add('selected');
+    }
+  });
+
+  // ── Step logic ──
+  let current = 1;
+  const TOTAL = 6;
+
+  function setProgress(step) {
+    const pct = Math.round(((step - 1) / (TOTAL - 1)) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('stepLabel').textContent = step < TOTAL ? `Step ${step} of ${TOTAL - 1}` : 'Complete';
+    document.getElementById('stepPct').textContent = pct + '%';
+  }
+
+  function advance(to) {
+    // Validate current before moving forward
+    if (to > current && !validate(current)) return;
+
+    document.getElementById(`screen${current}`).classList.remove('active');
+    document.getElementById(`screen${to}`).classList.add('active');
+    current = to;
+    setProgress(to);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function validate(step) {
+    const hide = id => document.getElementById(id).style.display = 'none';
+    const show = id => document.getElementById(id).style.display = 'block';
+
+    if (step === 1) {
+      const fn = document.getElementById('firstName').value.trim();
+      const em = document.getElementById('email').value.trim();
+      if (!fn || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { show('err1'); return false; }
+      hide('err1'); return true;
+    }
+
+    if (step === 2) {
+      const prob = document.getElementById('psychProblem').value.trim();
+      const impact = document.querySelector('input[name="impact"]:checked');
+      if (!prob || !impact) { show('err2'); return false; }
+      hide('err2'); return true;
+    }
+
+    if (step === 3) {
+      const func = document.querySelector('input[name="functioning"]:checked');
+      const wb   = document.querySelector('input[name="wellbeing"]:checked');
+      if (!func || !wb) { show('err3'); return false; }
+      hide('err3'); return true;
+    }
+
+    if (step === 4) {
+      for (let i = 0; i < 5; i++) {
+        if (!document.querySelector(`input[name="pss${i}"]:checked`)) { show('err4'); return false; }
+      }
+      hide('err4'); return true;
+    }
+
+    if (step === 5) {
+      for (let i = 5; i < 10; i++) {
+        if (!document.querySelector(`input[name="pss${i}"]:checked`)) { show('err5'); return false; }
+      }
+      hide('err5'); return true;
+    }
+
+    return true;
+  }
+
+  function calcPSS() {
+    let total = 0;
+    for (let i = 0; i < 10; i++) {
+      let v = parseInt(document.querySelector(`input[name="pss${i}"]:checked`).value);
+      if (PSS_REVERSED.has(i)) v = 4 - v;
+      total += v;
+    }
+    return total;
+  }
+
+  function calcPSYCHLOPS() {
+    const impact = parseInt(document.querySelector('input[name="impact"]:checked').value);
+    const func   = parseInt(document.querySelector('input[name="functioning"]:checked').value);
+    const wb     = parseInt(document.querySelector('input[name="wellbeing"]:checked').value);
+    return impact + func + wb;
+  }
+
+  // ── Submit ──
+  async function submitForm() {
+    if (!validate(5)) return;
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Saving...';
+
+    const firstName = document.getElementById('firstName').value.trim();
+    const email     = document.getElementById('email').value.trim();
+
+    const pssAnswers = {};
+    for (let i = 0; i < 10; i++) {
+      pssAnswers[`PSS Q${i + 1}`] = parseInt(document.querySelector(`input[name="pss${i}"]:checked`).value);
+    }
+
+    const payload = {
+      firstName,
+      email,
+      assessmentDate: new Date().toISOString(),
+      psychlopsProblem:     document.getElementById('psychProblem').value.trim(),
+      psychlopsImpact:      parseInt(document.querySelector('input[name="impact"]:checked').value),
+      psychlopsFunctioning: parseInt(document.querySelector('input[name="functioning"]:checked').value),
+      psychlopsWellbeing:   parseInt(document.querySelector('input[name="wellbeing"]:checked').value),
+      psychlopsTotal:       calcPSYCHLOPS(),
+      pssTotalScore:        calcPSS(),
+      ...pssAnswers
+    };
+
+    try {
+      const res = await fetch('/.netlify/functions/submit-assessment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) throw new Error('Server error');
+
+      document.getElementById('thankName').textContent = firstName;
+      advance(6);
+      document.getElementById('progressFill').style.width = '100%';
+      document.getElementById('stepLabel').textContent = 'Complete';
+      document.getElementById('stepPct').textContent = '100%';
+
+    } catch {
+      btn.disabled = false;
+      btn.textContent = 'Submit Check-In ✓';
+      const err = document.getElementById('err5');
+      err.textContent = 'Something went wrong — please try again. Your answers are still here.';
+      err.style.display = 'block';
+    }
+  }
+
+  setProgress(1);
+</script>
+</body>
+</html>

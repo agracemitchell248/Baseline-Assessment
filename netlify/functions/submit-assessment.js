@@ -78,4 +78,40 @@ exports.handler = async function (event) {
 
   // Link to Member Registry if we found a match
   if (memberRecordId) {
-    fields['Member ID'] = [memberRecord
+    fields['Member ID'] = [memberRecordId];
+  }
+
+  // ── Step 3: Create Assessment Data record ──
+  try {
+    const response = await fetch(
+      `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(ASSESSMENT_TABLE)}`,
+      {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ fields }),
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      console.error('Airtable error:', result);
+      return {
+        statusCode: response.status,
+        body: JSON.stringify({ error: result.error?.message || 'Airtable error' }),
+      };
+    }
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ success: true, id: result.id, memberLinked: !!memberRecordId }),
+    };
+
+  } catch (err) {
+    console.error('Function error:', err);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: 'Internal server error' }),
+    };
+  }
+};

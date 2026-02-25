@@ -431,7 +431,7 @@
       <div class="card-body">
         <div class="eyebrow">Welcome</div>
         <h1 class="screen-title">What you're carrying is real.</h1>
-        <p class="screen-desc">Losing a job — or watching funding you fought for disappear — isn't just a practical setback. It can shake your sense of identity, security, and purpose all at once. That's not weakness. That's a very human response to a very real loss.</p>
+        <p class="screen-desc">Losing a job — watching funding you fought for disappear — or being pushed out of a role you weren't ready to leave — isn't just a practical setback. It can shake your sense of identity, security, and purpose all at once. That's not weakness. That's a very human response to a very real loss.</p>
 
         <p class="screen-desc" style="margin-top:-1rem;">Unbroken was built for exactly this moment. This short check-in — about 5–8 minutes — is one of the ways we walk alongside you.</p>
 
@@ -447,7 +447,7 @@
           <div class="icon">🔒</div>
           <div class="text">
             <strong>Your privacy is non-negotiable</strong>
-            Your responses are stored privately and securely. They are never sold, shared, or used for anything other than supporting your journey. Only you and our founder, Aimee, can access them — and only with your knowledge.
+            Your responses are stored privately and securely. They are never sold or shared. It is only accessible to Aimee, our Founder and you. De-identified, aggregated responses may be used to improve UnBroken — your name and personal details are never attached to this data.
           </div>
         </div>
 
@@ -459,14 +459,13 @@
           <label for="firstName">First Name</label>
           <input type="text" id="firstName" placeholder="Your first name" autocomplete="given-name" />
         </div>
-        <div class="field">
+        <div class="field" id="emailGroup">
           <label for="email">Email Address <span style="font-weight:300; color:var(--mid);">— or use your phone number below</span></label>
           <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
         </div>
-        <div class="field">
+        <div class="field" id="phoneGroup">
           <label for="phone">Phone Number <span style="font-weight:300; color:var(--mid);">— or use your email above</span></label>
           <input type="text" id="phone" placeholder="(401) 555-1234" autocomplete="tel" />
-          <div style="font-size:0.78rem; color:var(--mid); margin-top:0.4rem;">Used to connect your responses to your profile. Never used for marketing.</div>
         </div>
       </div>
       <div class="nav-bar">
@@ -493,7 +492,7 @@
         <!-- Q1: Problem Description -->
         <div class="q-block">
           <p class="q-text"><span class="q-number">1</span> What is the main problem or difficulty you have been experiencing this week? Please describe it briefly.</p>
-          <textarea id="psychProblem" placeholder="Describe the main thing on your mind this week..."></textarea>
+          <textarea id="psychProblem" placeholder="e.g. Getting out of bed in the morning, writing my resume, cooking meals, leaving the house..."></textarea>
         </div>
 
         <div class="divider"></div>
@@ -610,7 +609,7 @@
         <div class="thankyou">
           <span class="ty-icon">🌱</span>
           <h2 class="ty-title">Thank you, <span id="thankName"></span>.</h2>
-          <p class="ty-body">Your responses have been recorded. Showing up for yourself — even when it's hard — is part of the work. You can close this window and return to the app.</p>
+          <p class="ty-body">Your responses have been recorded. Showing up for yourself — even when it's hard — is part of the work. You can close this window and continue your journey.</p>
           <br/>
           <div class="info-box privacy" style="text-align:left; margin-top:1rem;">
             <div class="icon">🔒</div>
@@ -623,6 +622,20 @@
   </div><!-- /card -->
 
 <script>
+  // ── Capture subscriptionId from URL ──
+  const urlParams = new URLSearchParams(window.location.search);
+  const subscriptionId = urlParams.get('subscriptionId') || '';
+
+  // If subscriptionId present, hide email/phone fields (name still shown)
+  if (subscriptionId) {
+    document.addEventListener('DOMContentLoaded', function () {
+      const emailGroup = document.getElementById('emailGroup');
+      const phoneGroup = document.getElementById('phoneGroup');
+      if (emailGroup) emailGroup.style.display = 'none';
+      if (phoneGroup) phoneGroup.style.display = 'none';
+    });
+  }
+
   // ── PSS Question data ──
   const PSS = [
     "In the last month, how often have you been upset because of something that happened unexpectedly?",
@@ -710,7 +723,12 @@
       const em = document.getElementById('email').value.trim();
       const ph = document.getElementById('phone').value.trim();
       const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);
-      if (!fn || (!emailValid && !ph)) {
+      // If subscriptionId present, only name is required
+      if (!fn) {
+        document.getElementById('err1').textContent = 'Please enter your first name.';
+        show('err1'); return false;
+      }
+      if (!subscriptionId && !emailValid && !ph) {
         document.getElementById('err1').textContent = 'Please enter your first name and either an email address or phone number.';
         show('err1'); return false;
       }
@@ -783,6 +801,7 @@
     }
 
     const payload = {
+      subscriptionId,
       firstName,
       email,
       phone,

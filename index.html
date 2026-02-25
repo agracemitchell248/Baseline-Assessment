@@ -690,31 +690,7 @@
       });
       e.target.closest('.opt-label').classList.add('selected');
 
-      // Auto-scroll to next question block (skipping dividers)
-      const currentBlock = e.target.closest('.q-block');
-      if (currentBlock) {
-        let next = currentBlock.nextElementSibling;
-        // Skip over divider elements
-        while (next && !next.classList.contains('q-block')) {
-          next = next.nextElementSibling;
-        }
-        if (next && next.classList.contains('q-block')) {
-          setTimeout(() => {
-            next.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }, 1200);
-        } else {
-          // Last question - scroll submit or continue button into view
-          const submitBtn = document.getElementById('submitBtn');
-          const activeScreen = document.querySelector('.screen.active');
-          const continueBtn = activeScreen ? activeScreen.querySelector('.btn-primary') : null;
-          const btnToShow = submitBtn || continueBtn;
-          if (btnToShow) {
-            setTimeout(() => {
-              btnToShow.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 1200);
-          }
-        }
-      }
+
     }
   });
 
